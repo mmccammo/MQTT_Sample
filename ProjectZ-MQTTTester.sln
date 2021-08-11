@@ -1,0 +1,41 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.31410.357
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "MQTT_Listener", "MQTT_Listener\MQTT_Listener.vcxproj", "{1901E024-8A1E-4B51-922F-D7F394EAEC0B}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "MQTT_Talker", "MQTT_Talker\MQTT_Talker.vcxproj", "{A54DE19E-E1A5-43BC-A7B5-17A5FFD9BCC6}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|x64 = Debug|x64
+		Debug|x86 = Debug|x86
+		Release|x64 = Release|x64
+		Release|x86 = Release|x86
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{1901E024-8A1E-4B51-922F-D7F394EAEC0B}.Debug|x64.ActiveCfg = Debug|x64
+		{1901E024-8A1E-4B51-922F-D7F394EAEC0B}.Debug|x64.Build.0 = Debug|x64
+		{1901E024-8A1E-4B51-922F-D7F394EAEC0B}.Debug|x86.ActiveCfg = Debug|Win32
+		{1901E024-8A1E-4B51-922F-D7F394EAEC0B}.Debug|x86.Build.0 = Debug|Win32
+		{1901E024-8A1E-4B51-922F-D7F394EAEC0B}.Release|x64.ActiveCfg = Release|x64
+		{1901E024-8A1E-4B51-922F-D7F394EAEC0B}.Release|x64.Build.0 = Release|x64
+		{1901E024-8A1E-4B51-922F-D7F394EAEC0B}.Release|x86.ActiveCfg = Release|Win32
+		{1901E024-8A1E-4B51-922F-D7F394EAEC0B}.Release|x86.Build.0 = Release|Win32
+		{A54DE19E-E1A5-43BC-A7B5-17A5FFD9BCC6}.Debug|x64.ActiveCfg = Debug|x64
+		{A54DE19E-E1A5-43BC-A7B5-17A5FFD9BCC6}.Debug|x64.Build.0 = Debug|x64
+		{A54DE19E-E1A5-43BC-A7B5-17A5FFD9BCC6}.Debug|x86.ActiveCfg = Debug|Win32
+		{A54DE19E-E1A5-43BC-A7B5-17A5FFD9BCC6}.Debug|x86.Build.0 = Debug|Win32
+		{A54DE19E-E1A5-43BC-A7B5-17A5FFD9BCC6}.Release|x64.ActiveCfg = Release|x64
+		{A54DE19E-E1A5-43BC-A7B5-17A5FFD9BCC6}.Release|x64.Build.0 = Release|x64
+		{A54DE19E-E1A5-43BC-A7B5-17A5FFD9BCC6}.Release|x86.ActiveCfg = Release|Win32
+		{A54DE19E-E1A5-43BC-A7B5-17A5FFD9BCC6}.Release|x86.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {5CAA32D1-47E0-4275-AE4F-D3EAE0215D47}
+	EndGlobalSection
+EndGlobal
