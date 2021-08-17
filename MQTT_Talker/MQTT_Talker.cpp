@@ -145,11 +145,15 @@ int main(int argc, char* argv[])
 
 	Messenger l_Messenger(&client, &cb);
 
-	MessageStruct* l_Message = new MessageStruct();
-	l_Message->MessageType = 1;
-	l_Message->ID = 47;
-	l_Message->Lat = 22.0222;
-	l_Message->Lon = 98.4555;
+	Vstate* l_Message = new Vstate();
+	l_Message->latitude = 30.1766;
+	l_Message->longitude = 85.8055;
+	l_Message->altitude = -3;
+	l_Message->pitch = 4.5;
+	l_Message->roll = 5.6;
+	l_Message->yaw = 6.7;
+	l_Message->speed = 10.2;
+	l_Message->timestamp = 1;
 
 	client.set_callback(cb);
 
@@ -174,10 +178,11 @@ int main(int argc, char* argv[])
 			{
 				cout << "\n\t[Talker] Broadcasting Message:" << endl;
 
-				mqtt::message_ptr pubmsg = mqtt::make_message(TOPIC, (void*)l_Message, sizeof(MessageStruct), 0, false);
-				client.publish(pubmsg)->wait_for(TIMEOUT);
-
 				TimerStart = std::chrono::system_clock::now();
+				l_Message->timestamp = TimerStart.time_since_epoch().count();
+
+				mqtt::message_ptr pubmsg = mqtt::make_message(TOPIC, (void*)l_Message, sizeof(Vstate), 0, false);
+				client.publish(pubmsg)->wait_for(TIMEOUT);
 			}
 
 			printf("[Talker] Next Broadcast: [%d/%d] Seconds.\r", (int)SecondsElapsed, (int)TimeBetweenMessages);
