@@ -6,6 +6,7 @@
 #include <chrono>
 #include <cstring>
 #include "mqtt/async_client.h"
+#include "../MessageStructs.h"
 
 using namespace std;
 
@@ -124,8 +125,8 @@ void StarTimer()
 
 class Messenger
 {
-	mqtt::async_client *client;
-	callback *cb;
+	mqtt::async_client* client;
+	callback* cb;
 
 public:
 	Messenger(mqtt::async_client* a_Client, callback* a_Callback) : client(a_Client), cb(a_Callback) {}
@@ -138,14 +139,18 @@ int main(int argc, char* argv[])
 
 	cout << "Initializing for server '" << address << "'..." << endl;
 	//mqtt::async_client client(address, clientID, PERSIST_DIR);
-	
+
 	callback cb;
 	mqtt::async_client client(address, clientID, PERSIST_DIR);
 
 	Messenger l_Messenger(&client, &cb);
-	
 
-	
+	MessageStruct* l_Message = new MessageStruct();
+	l_Message->MessageType = 1;
+	l_Message->ID = 47;
+	l_Message->Lat = 22.0222;
+	l_Message->Lon = 98.4555;
+
 	client.set_callback(cb);
 
 	auto connOpts = mqtt::connect_options_builder()
@@ -154,11 +159,12 @@ int main(int argc, char* argv[])
 		.finalize();
 
 	try {
-		cout << "\nConnecting..." << endl;
+
 		mqtt::token_ptr conntok = client.connect(connOpts);
-		cout << "Waiting for the connection..." << endl;
+		cout << "\n[Talker] Connecting..." << endl;
 		conntok->wait();
-		cout << "  ...OK" << endl;
+
+		cout << "[Talker] Connected" << endl;
 
 		StarTimer();
 
@@ -166,51 +172,15 @@ int main(int argc, char* argv[])
 		{
 			if (TimerFunc())
 			{
-				// First use a message pointer.
+				cout << "\n\t[Talker] Broadcasting Message:" << endl;
 
-				cout << "\nSending message..." << endl;
-				mqtt::message_ptr pubmsg = mqtt::make_message(TOPIC, PAYLOAD1);
-				pubmsg->set_qos(QOS);
+				mqtt::message_ptr pubmsg = mqtt::make_message(TOPIC, (void*)l_Message, sizeof(MessageStruct), 0, false);
 				client.publish(pubmsg)->wait_for(TIMEOUT);
-				//cout << "  ...OK" << endl;
-
-				// Now try with itemized publish.
-
-				//cout << "\nSending next message..." << endl;
-				mqtt::delivery_token_ptr pubtok;
-				pubtok = client.publish(TOPIC, PAYLOAD2, strlen(PAYLOAD2), QOS, false);
-				//cout << "  ...with token: " << pubtok->get_message_id() << endl;
-				//cout << "  ...for message with " << pubtok->get_message()->get_payload().size()
-				//	<< " bytes" << endl;
-				pubtok->wait_for(TIMEOUT);
-				//cout << "  ...OK" << endl;
-
-				// Now try with a listener
-
-				//cout << "\nSending next message..." << endl;
-				action_listener listener;
-				pubmsg = mqtt::make_message(TOPIC, PAYLOAD3);
-				pubtok = client.publish(pubmsg, nullptr, listener);
-				pubtok->wait();
-				//cout << "  ...OK" << endl;
-
-				// Finally try with a listener, but no token
-
-				//cout << "\nSending final message..." << endl;
-				delivery_action_listener deliveryListener;
-				pubmsg = mqtt::make_message(TOPIC, PAYLOAD4);
-				client.publish(pubmsg, nullptr, deliveryListener);
-
-				while (!deliveryListener.is_done()) {
-					this_thread::sleep_for(std::chrono::milliseconds(100));
-				}
-				//cout << "OK" << endl;
 
 				TimerStart = std::chrono::system_clock::now();
-				//this_thread::sleep_for(std::chrono::milliseconds(20000));
 			}
 
-			printf("Next Broadcast: [%d/%d] Seconds.\r", (int)SecondsElapsed, (int)TimeBetweenMessages);
+			printf("[Talker] Next Broadcast: [%d/%d] Seconds.\r", (int)SecondsElapsed, (int)TimeBetweenMessages);
 		}
 
 		// Double check that there are no pending tokens
