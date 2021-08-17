@@ -125,17 +125,14 @@ class callback : public virtual mqtt::callback,
 		//std::cout << "\t[" << msg->get_topic() << "](" << std::chrono::system_clock::now().time_since_epoch().count()  << ") - Payload: " << msg->to_string() << std::endl;
 		std::cout << "[Listener] Incoming message on Topic [" << msg->get_topic() << "] at Time (" << std::chrono::system_clock::now().time_since_epoch().count() << ")" << std::endl;
 
-		MessageStruct* rawMessage = new MessageStruct();
-		memcpy(rawMessage, msg->get_payload_ref().data(), sizeof(MessageStruct));
+		Vstate* rawMessage = new Vstate();
+		memcpy(rawMessage, msg->get_payload_ref().data(), sizeof(Vstate));
 
 		if (rawMessage)
 		{
-			std::cout << "\tID: " << rawMessage->ID << std::endl;
-			std::cout << "\tLat: " << rawMessage->Lat << " - Lon: " << rawMessage->Lon << std::endl;
-		}
-		else
-		{
-			std::cout << "/t/tPayload: " << msg->to_string() << std::endl;
+			std::cout << "\tLat: " << rawMessage->latitude << " - Lon: " << rawMessage->longitude << "- Alt: " << rawMessage->altitude << std::endl;
+			std::cout << "\tPitch: " << rawMessage->pitch << "- Roll: " << rawMessage->roll << " - Yaw: " << rawMessage->yaw << std::endl;
+			std::cout << "\tSpeed: " << rawMessage->speed << " - Timestamp: " << rawMessage->timestamp << std::endl;
 		}
 
 		delete(rawMessage);
