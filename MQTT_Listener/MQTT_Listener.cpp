@@ -1,43 +1,13 @@
-// async_subscribe.cpp
-//
-// This is a Paho MQTT C++ client, sample application.
-//
-// This application is an MQTT subscriber using the C++ asynchronous client
-// interface, employing callbacks to receive messages and status updates.
-//
-// The sample demonstrates:
-//  - Connecting to an MQTT server/broker.
-//  - Subscribing to a topic
-//  - Receiving messages through the callback API
-//  - Receiving network disconnect updates and attempting manual reconnects.
-//  - Using a "clean session" and manually re-subscribing to topics on
-//    reconnect.
-//
-
-/*******************************************************************************
- * Copyright (c) 2013-2020 Frank Pagliughi <fpagliughi@mindspring.com>
- *
- * All rights reserved. This program and the accompanying materials
- * are made available under the terms of the Eclipse Public License v1.0
- * and Eclipse Distribution License v1.0 which accompany this distribution.
- *
- * The Eclipse Public License is available at
- *    http://www.eclipse.org/legal/epl-v10.html
- * and the Eclipse Distribution License is available at
- *   http://www.eclipse.org/org/documents/edl-v10.php.
- *
- * Contributors:
- *    Frank Pagliughi - initial implementation and documentation
- *******************************************************************************/
-
 #include <iostream>
 #include <cstdlib>
-#include <string>
+
 #include <cstring>
 #include <cctype>
 #include <thread>
 #include <chrono>
 #include "mqtt/async_client.h"
+
+#include "../MessageStructs.h"
 
 const std::string SERVER_ADDRESS("broker.hivemq.com:1883");
 const std::string CLIENT_ID("MQTT-Listener");
@@ -152,7 +122,23 @@ class callback : public virtual mqtt::callback,
 
 	// Callback for when a message arrives.
 	void message_arrived(mqtt::const_message_ptr msg) override {
-		std::cout << "\t[" << msg->get_topic() << "](" << std::chrono::system_clock::now().time_since_epoch().count()  << ") - Payload: " << msg->to_string() << std::endl;
+		//std::cout << "\t[" << msg->get_topic() << "](" << std::chrono::system_clock::now().time_since_epoch().count()  << ") - Payload: " << msg->to_string() << std::endl;
+		std::cout << "[Listener] Incoming message on Topic [" << msg->get_topic() << "] at Time (" << std::chrono::system_clock::now().time_since_epoch().count() << ")" << std::endl;
+
+		MessageStruct* rawMessage = new MessageStruct();
+		memcpy(rawMessage, msg->get_payload_ref().data(), sizeof(MessageStruct));
+
+		if (rawMessage)
+		{
+			std::cout << "\tID: " << rawMessage->ID << std::endl;
+			std::cout << "\tLat: " << rawMessage->Lat << " - Lon: " << rawMessage->Lon << std::endl;
+		}
+		else
+		{
+			std::cout << "/t/tPayload: " << msg->to_string() << std::endl;
+		}
+
+		delete(rawMessage);
 	}
 
 	void delivery_complete(mqtt::delivery_token_ptr token) override {}
